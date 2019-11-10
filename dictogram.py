@@ -1,6 +1,7 @@
 #!python
 
 from __future__ import division, print_function  # Python 2 and 3 compatibility
+from random import random
 
 
 class Dictogram(dict):
@@ -29,8 +30,41 @@ class Dictogram(dict):
         
         return self.get(word, 0)
 
+    def sampling(self):
+        ran_num = random()
+        weight_dict = self.weight_of_all_words_dict()
+        prev_weight = 0
+    
+        for key in weight_dict:
+            if prev_weight < ran_num < weight_dict[key]:
+                return key
+            prev_weight = weight_dict[key]
+
+    def word_weight(self, word):
+        if word in self:
+            word_wgt = self.frequency(word) / self.tokens
+            return word_wgt
+        else:
+            return 'no word found'
+    
+    def weight_of_all_words_dict(self):
+        weight_dict = {}
+        total_weight = 0
+        for key in self.keys():
+            wgt = self.word_weight(key)
+            total_weight += wgt
+            weight_dict[key] = weight_dict.get(key, total_weight)
+
+        return weight_dict
 
 
+def test_sampling_dict(histogram):
+    sample_dict = {}
+    for _ in range(10000):
+        word = histogram.sampling()
+        sample_dict[word] = sample_dict.get(word, 0) + 1
+
+    return sample_dict
 
 def print_histogram(word_list):
     print('word list: {}'.format(word_list))
@@ -42,6 +76,10 @@ def print_histogram(word_list):
         freq = histogram.frequency(word)
         print('{!r} occurs {} times'.format(word, freq))
     print()
+    print(f'word has a weight of {histogram.word_weight(word_list[0])} ')
+    print(histogram.weight_of_all_words_dict())
+    print(histogram.sampling())
+    print(test_sampling_dict(histogram))
 
 
 def main():

@@ -1,5 +1,6 @@
 import re
 from random import random
+import cProfile
 # from rearrange import input_handler
 
 '''Takes a file and turns it into a histogram dictionary, displaying word frequency'''
@@ -19,14 +20,14 @@ def create_histogram(file):
     return histogram
 
 
-def get_file_clean():
-    '''accepts the text file and opens the file, then reads through it and changes all the charecters to lowercase,
-    then returns a list of all the words'''
-    file = 'diogenes.txt'
-    with open(file, 'r') as file:
-        open_file = file.read().lower()
-        words = re.sub(r'[^a-zA-Z\s]', '', open_file)
-    return words.split()
+# def get_file_clean():
+#     '''accepts the text file and opens the file, then reads through it and changes all the charecters to lowercase,
+#     then returns a list of all the words'''
+#     file = 'diogenes.txt'
+#     with open(file, 'r') as file:
+#         open_file = file.read().lower()
+#         words = re.sub(r'[^a-zA-Z\s]', '', open_file)
+#     return words.split()
 
 
 def word_frequency( histo_word, histogram):
@@ -148,7 +149,7 @@ def test_sampling_dict(histogram):
 
 def test_sampling_list(histogram):
     sample_dict = {}
-    for _ in range(10):
+    for _ in range(100000):
         word = sample_by_frequency_list(histogram)
         sample_dict[word] = sample_dict.get(word, 0) + 1
 
@@ -157,7 +158,7 @@ def test_sampling_list(histogram):
 
 
 if __name__ == "__main__":
-    file = get_file_clean()
+    # file = get_file_clean()
     # histofile = 'histogram.txt'
     # histo = histogram(file)
     # # print(histo)
@@ -166,9 +167,9 @@ if __name__ == "__main__":
     # print(word_frequency('diogenes', histo))
     # sample_by_frequency(histo, tokens)
     
-    fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
+    # fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
     # print(histogram(fish_text))
-    fishtogram = create_histogram(fish_text)
+    # fishtogram = create_histogram(fish_text)
     # print(total_words(fishtogram))
     # print(word_frequency('fish', fishtogram))
     # print(word_weight('one', fishtogram))
@@ -183,9 +184,29 @@ if __name__ == "__main__":
     # print(test_sampling_list(fishtogram))
     # print(weight_all_words_dict(fishtogram))
     # print(sample_by_frequency_dict(fishtogram))
-    print(test_sampling_dict(fishtogram))
 
     # fishtogram = histogram(fish_text)
     # sorted_histo = sortogram(histo)
     # log_histogram(sorted_histo)
+    '''
+    benchmarking sampling dict test with 100,000 sample size
+    
+    results:
+        300,004 function calls, in .116 seconds
+    '''
+    # print(cProfile.run('test_sampling_dict(fishtogram)'))
 
+    '''
+    benchmarking sampling list test with 100,000 sample size
+
+    results:
+        3,200,004 function calls in 1.369 seconds
+    '''
+    # print(cProfile.run('test_sampling_list(fishtogram)'))
+
+    '''
+    What do these results mean?
+        well, this means that it is much faster to sample from a dictionary, than it is to sample from a list. 
+        however, lists save memory, the tradeoff is that it takes much longer to iterate through a list, 
+        than it does to search through a dictionary
+    '''
