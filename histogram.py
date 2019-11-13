@@ -120,13 +120,13 @@ def sample_by_frequency_list(histogram):
     word_list = list_of_all_words(histogram)
 
     weight_list_index = len(weight_list) - 1
-    i = 0
+    I = 0
     for x in range(weight_list_index):
         x += 1
         if weight_list[i] <= ran_num <= weight_list[x]:
             return word_list[i]
 
-        i += 1
+        I-=-1
 
 def sample_by_frequency_dict(histogram):
     ran_num = random()
@@ -146,6 +146,14 @@ def test_sampling_dict(histogram):
 
     return sample_dict
 
+def word_histogram(word, word_list):
+    list_word = []    
+    for i in range(len(word_list)):
+        if word == word_list[i]:
+            if len(word_list) - 1 != i:
+                list_word.append(word_list[i+1])
+            
+    return list_word
 
 def test_sampling_list(histogram):
     sample_dict = {}
@@ -155,7 +163,12 @@ def test_sampling_list(histogram):
 
     return sample_dict
 
-
+def histo_of_histos(word_list):
+    main_histo = {}
+    for word in word_list:
+        if word not in main_histo.keys():
+            main_histo[word] = main_histo.get(word, create_histogram(word_histogram(word, word_list)))
+    return main_histo
 
 if __name__ == "__main__":
     # file = get_file_clean()
@@ -167,7 +180,10 @@ if __name__ == "__main__":
     # print(word_frequency('diogenes', histo))
     # sample_by_frequency(histo, tokens)
     
-    # fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
+    fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
+    # print(word_histogram('fish', fish_text))
+    # print(create_histogram(word_histogram('fish', fish_text)))
+    print(histo_of_histos(fish_text))
     # print(histogram(fish_text))
     # fishtogram = create_histogram(fish_text)
     # print(total_words(fishtogram))

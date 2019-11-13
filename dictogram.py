@@ -26,7 +26,6 @@ class Dictogram(dict):
 
     def frequency(self, word):
         """Return frequency count of given word, or 0 if word is not found."""
-        # TODO: Retrieve word frequency count
         
         return self.get(word, 0)
 
@@ -57,6 +56,8 @@ class Dictogram(dict):
 
         return weight_dict
 
+    def markov_dict(self):
+        pass
 
 def test_sampling_dict(histogram):
     sample_dict = {}
