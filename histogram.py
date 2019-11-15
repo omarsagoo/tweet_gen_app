@@ -20,14 +20,14 @@ def create_histogram(file):
     return histogram
 
 
-# def get_file_clean():
-#     '''accepts the text file and opens the file, then reads through it and changes all the charecters to lowercase,
-#     then returns a list of all the words'''
-#     file = 'diogenes.txt'
-#     with open(file, 'r') as file:
-#         open_file = file.read().lower()
-#         words = re.sub(r'[^a-zA-Z\s]', '', open_file)
-#     return words.split()
+def get_file_clean():
+    '''accepts the text file and opens the file, then reads through it and changes all the charecters to lowercase,
+    then returns a list of all the words'''
+    file = 'diogenes.txt'
+    with open(file, 'r') as file:
+        open_file = file.read().lower()
+        words = re.sub(r'[^a-zA-Z\s]', '', open_file)
+    return words.split()
 
 
 def word_frequency( histo_word, histogram):
@@ -138,13 +138,31 @@ def sample_by_frequency_dict(histogram):
             return key
         prev_weight = weight_dict[key]
 
-def test_sampling_dict(histogram):
-    sample_dict = {}
-    for _ in range(10000):
-        word = sample_by_frequency_dict(histogram)
-        sample_dict[word] = sample_dict.get(word, 0) + 1
+def word_weight_nested_histo(nested_histogram):
+    histo_nested_weight = {}
+    for key in nested_histogram:
+        histo_nested_weight[key] = weight_all_words_dict(nested_histogram[key])
 
-    return sample_dict
+    return histo_nested_weight
+
+def sample_sentence(nested_histogram, original_histogram):
+    histo_nested_weight = word_weight_nested_histo(nested_histogram)
+    sentence = []
+   
+    for _ in range(5):
+        word = sample_by_frequency_dict(original_histogram)
+        sentence.append(word)
+        other_word = sample_by_frequency_dict(nested_histogram[word])
+        sentence.append(other_word)
+    return ' '.join(sentence)
+
+
+def histo_of_histos(word_list):
+    main_histo = {}
+    for word in word_list:
+        if word not in main_histo.keys():
+            main_histo[word] = main_histo.get(word, create_histogram(word_histogram(word, word_list)))
+    return main_histo
 
 def word_histogram(word, word_list):
     list_word = []    
@@ -163,29 +181,35 @@ def test_sampling_list(histogram):
 
     return sample_dict
 
-def histo_of_histos(word_list):
-    main_histo = {}
-    for word in word_list:
-        if word not in main_histo.keys():
-            main_histo[word] = main_histo.get(word, create_histogram(word_histogram(word, word_list)))
-    return main_histo
+def test_sampling_dict(histogram):
+    sample_dict = {}
+    for _ in range(10000):
+        word = sample_by_frequency_dict(histogram)
+        sample_dict[word] = sample_dict.get(word, 0) + 1
+
+    return sample_dict
 
 if __name__ == "__main__":
-    # file = get_file_clean()
-    # histofile = 'histogram.txt'
-    # histo = histogram(file)
+    # words = get_file_clean()
+    # # histofile = 'histogram.txt'
+    # histo = create_histogram(words)
+    # histo_dict = histo_of_histos(words)
+    # sample_sentence(histo_dict, histo)
+
     # # print(histo)
     # # print(total_words(histo))
     # tokens = total_words(histo)
     # print(word_frequency('diogenes', histo))
     # sample_by_frequency(histo, tokens)
-    
-    fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
+    # wood = 'Alice was beginning to get very tired of sitting by her sister on the bank and of having nothing to do'
+    # fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
     # print(word_histogram('fish', fish_text))
     # print(create_histogram(word_histogram('fish', fish_text)))
-    print(histo_of_histos(fish_text))
-    # print(histogram(fish_text))
+    # print(histo_of_histos(wood.split()))
     # fishtogram = create_histogram(fish_text)
+
+    # print(sample_sentence(histo_of_histos(wood.split()), create_histogram(wood.split()) ))
+    # print(histogram(fish_text))
     # print(total_words(fishtogram))
     # print(word_frequency('fish', fishtogram))
     # print(word_weight('one', fishtogram))
