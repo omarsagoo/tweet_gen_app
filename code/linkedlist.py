@@ -108,6 +108,7 @@ class LinkedList(object):
                 return node
 
     def replace(self, find_item, new_item):
+        """finds and replaces a node with the given arguments."""
         node = self.find(lambda item: item == find_item)
         node.data = new_item
         return node
