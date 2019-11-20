@@ -104,10 +104,13 @@ class LinkedList(object):
             if quality(node.data) == False:
                 node = node.next
             elif node.data != None:
-                return node.data
+                # return node.data
+                return node
 
-
-        
+    def replace(self, find_item, new_item):
+        node = self.find(lambda item: item == find_item)
+        node.data = new_item
+        return node
 
 
     def delete(self, item):
@@ -158,7 +161,7 @@ def test_linked_list():
     print('length: {}'.format(ll.length()))
 
     # Enable this after implementing delete method
-    delete_implemented = True
+    delete_implemented = False
     if delete_implemented:
         print('\nTesting delete:')
         for item in ['B', 'C', 'A']:
@@ -169,6 +172,9 @@ def test_linked_list():
         print('head: {}'.format(ll.head))
         print('tail: {}'.format(ll.tail))
         print('length: {}'.format(ll.length()))
+
+    print('replace B with D: {}'.format(ll.replace('B', 'D')))
+    print(ll)
 
 
 if __name__ == '__main__':
