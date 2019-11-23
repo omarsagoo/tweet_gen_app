@@ -7,6 +7,7 @@ class Node(object):
         """Initialize this node with the given data."""
         self.data = data
         self.next = None
+        self.previous = None
 
     def __repr__(self):
         """Return a string representation of this node."""
@@ -34,6 +35,20 @@ class LinkedList(object):
     def __repr__(self):
         """Return a string representation of this linked list."""
         return 'LinkedList({!r})'.format(self.items())
+
+    
+    def __iter__(self):
+        """allows for iteration through the linked list, uses the python __iter__() method to allow this."""
+        # set the initial node to the head
+        node = self.head
+
+        # iterate in a range of the length of the linked list
+        for _ in range(self.count):
+            #  yield the node data. 
+            # yield works similarily to return, however it allows the function to continue running
+            yield node.data
+            # move on to the next node
+            node = node.next
 
     def items(self):
         """Return a list (dynamic array) of all items in this linked list.
@@ -70,6 +85,7 @@ class LinkedList(object):
             self.count += 1
         else:
             self.tail.next = node
+            node.previous = self.tail
             self.tail = node
             self.count += 1
 
@@ -88,6 +104,7 @@ class LinkedList(object):
 
         else:
             node.next = self.head
+            self.head.previous = node 
             self.head = node
             self.count += 1
 
@@ -107,6 +124,8 @@ class LinkedList(object):
                 # return node.data
                 return node
 
+        return None
+
     def replace(self, find_item, new_item):
         """finds and replaces a node with the given arguments."""
         node = self.find(lambda item: item == find_item)
@@ -116,27 +135,52 @@ class LinkedList(object):
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
-        TODO: Best case running time: O(???) Why and under what conditions?
-        TODO: Worst case running time: O(???) Why and under what conditions?"""
+        TODO: Best case running time: O(1) Why and under what conditions?
+        TODO: Worst case running time: O(1) Why and under what conditions?"""
         
         node = self.head
-        prev_node = None
+        # prev_node = None
         while node:
-            if node.data == item:
-                if prev_node == None:
-                    self.head = node.next
-                    if node.next == None:
-                        self.tail = None
-                elif node.next == None:
-                    prev_node.next = None
-                    self.tail = prev_node
+            if self.count > 2:
+                if node.data == item:
+                    if node.previous == None:
+                        self.head = node.next
+                        if node.next == None:
+                            self.tail = None
+                    elif node.next == None:
+                        # prev_node.next = None
+                        node.previous.next = None
+                        self.tail = node.previous
+                    else:
+                        # prev_node.next = node.next
+                        node.next.previous = node.previous
+                        node.previous.next = node.next
+                    self.count -= 1
+                    return
                 else:
-                    prev_node.next = node.nex
-                self.count -= 1
-                return
-            else:
-                prev_node = node
-                node = node.next
+                    # prev_node = node
+                    node = node.next
+            elif self.count == 2:
+                if self.head.data == item:
+                    self.head = self.tail
+                    self.tail.previous = None
+                    self.count -= 1
+                    return
+                elif self.tail.data == item:
+                    self.tail = self.head
+                    self.head.next = None
+                    self.count -= 1
+                    return
+            elif self.count == 1:
+                if self.head.data == item:
+                    self.head = None
+                    self.tail = None 
+                    self.count = 0
+                    return
+
+        # if self.length == 0:
+        #     self.head = None
+        #     self.tail = None
         raise ValueError('Item not found: {}'.format(item))
 
                 
@@ -152,7 +196,7 @@ def test_linked_list():
     print('list: {}'.format(ll))
 
     print('\nTesting append:')
-    for item in ['A', 'B', 'C']:
+    for item in ['A', 'B', 'C', 'D', 'E']:
         print('append({!r})'.format(item))
         ll.append(item)
         print('list: {}'.format(ll))
@@ -161,21 +205,35 @@ def test_linked_list():
     print('tail: {}'.format(ll.tail))
     print('length: {}'.format(ll.length()))
 
+    test_replace = False
+    if test_replace == True:
+        print()
+        print('replace A with E: {}'.format(ll.replace('A', 'E')))
+        print(ll)
+        for item in ll:
+            print(item)
+        print()
+
     # Enable this after implementing delete method
-    delete_implemented = False
+    delete_implemented = True
     if delete_implemented:
         print('\nTesting delete:')
-        for item in ['B', 'C', 'A']:
+        for item in ['B', 'C', 'A', 'D', 'E']:
+            print()
             print('delete({!r})'.format(item))
             ll.delete(item)
             print('list: {}'.format(ll))
+            print('head: {}'.format(ll.head))
+            print('tail: {}'.format(ll.tail))
+            print('length: {}'.format(ll.length()))
+            
 
+        print()
         print('head: {}'.format(ll.head))
         print('tail: {}'.format(ll.tail))
         print('length: {}'.format(ll.length()))
 
-    print('replace B with D: {}'.format(ll.replace('B', 'D')))
-    print(ll)
+    
 
 
 if __name__ == '__main__':

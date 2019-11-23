@@ -133,17 +133,34 @@ class LinkedListTest(unittest.TestCase):
         ll.prepend('B')
         assert ll.head.data == 'B'  # New head
         assert ll.tail.data == 'C'  # Unchanged
+        assert ll.tail.previous.data == 'B'
         ll.prepend('A')
         assert ll.head.data == 'A'  # New head
         assert ll.tail.data == 'C'  # Unchanged
+        
+    def test_previous(self):
+        ll = LinkedList()
+        ll.prepend('C')
+        assert ll.head.data == 'C'  # New head
+        assert ll.tail.data == 'C'  # New head
+        ll.prepend('B')
+        assert ll.head.data == 'B'  # New head
+        assert ll.tail.data == 'C'  # Unchanged
+        assert ll.tail.previous.data == 'B'
+        ll.prepend('A')
+        assert ll.head.data == 'A'  # New head
+        assert ll.tail.data == 'C'  # Unchanged
+        assert ll.head.next.previous.data == 'A'
+        assert ll.tail.previous.data == 'B'
+        assert ll.tail.previous.previous.data == 'A'
 
     def test_find(self):
         ll = LinkedList(['A', 'B', 'C'])
         print(ll.head.data)
         print(ll.tail.data)
-        assert ll.find(lambda item: item == 'B') == 'B'  # Match equality
-        assert ll.find(lambda item: item < 'B') == 'A'  # Match less than
-        assert ll.find(lambda item: item > 'B') == 'C'  # Match greater than
+        assert ll.find(lambda item: item == 'B').data == 'B'  # Match equality
+        assert ll.find(lambda item: item < 'B').data == 'A'  # Match less than
+        assert ll.find(lambda item: item > 'B').data == 'C'  # Match greater than
         assert ll.find(lambda item: item == 'X') is None  # No matching item
 
     def test_delete_with_3_items(self):
