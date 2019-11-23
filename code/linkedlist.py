@@ -112,8 +112,10 @@ class LinkedList(object):
 
     def find(self, quality):
         """Return an item from this linked list satisfying the given quality.
-        TODO: Best case running time: O(1) Why and under what conditions?
-        TODO: Worst case running time: O(n) Why and under what conditions?"""
+        Best case running time: O(1) Why and under what conditions?
+            if there are only one or two items in the list
+        Worst case running time: O(n) Why and under what conditions?
+            if there are a lot of items in the list"""
        
         node = self.head
 
@@ -135,8 +137,10 @@ class LinkedList(object):
 
     def delete(self, item):
         """Delete the given item from this linked list, or raise ValueError.
-        TODO: Best case running time: O(1) Why and under what conditions?
-        TODO: Worst case running time: O(1) Why and under what conditions?"""
+        Best case running time: O(1) Why and under what conditions?
+            depending on the size of this linked list. if there is only one or two items in the list
+        Worst case running time: O(n) Why and under what conditions?
+            depending on the size of the linked list. if there are a lot of items in the list"""
         
         node = self.head
         # prev_node = None
