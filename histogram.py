@@ -1,5 +1,5 @@
 import re
-from random import random
+from random import random, randint
 import cProfile
 # from rearrange import input_handler
 
@@ -129,14 +129,24 @@ def sample_by_frequency_list(histogram):
         I-=-1
 
 def sample_by_frequency_dict(histogram):
-    ran_num = random()
-    weight_dict = weight_all_words_dict(histogram)
-    prev_weight = 0
+    # ran_num = random()
+    # weight_dict = weight_all_words_dict(histogram)
+    # prev_weight = 0
    
-    for key in weight_dict:
-        if prev_weight < ran_num < weight_dict[key]:
+    # for key in weight_dict:
+    #     if prev_weight < ran_num < weight_dict[key]:
+    #         return key
+    #     prev_weight = weight_dict[key]
+
+    tokens = total_words(histogram)
+    ran_num = randint(1, tokens)
+    curr_range = 0
+    for key in histogram:
+        
+        curr_range += histogram[key]
+        if curr_range >= ran_num:
             return key
-        prev_weight = weight_dict[key]
+
 
 def word_weight_nested_histo(nested_histogram):
     histo_nested_weight = {}
@@ -146,7 +156,6 @@ def word_weight_nested_histo(nested_histogram):
     return histo_nested_weight
 
 def sample_sentence(nested_histogram, original_histogram):
-    histo_nested_weight = word_weight_nested_histo(nested_histogram)
     sentence = []
    
     for _ in range(5):
@@ -183,7 +192,7 @@ def test_sampling_list(histogram):
 
 def test_sampling_dict(histogram):
     sample_dict = {}
-    for _ in range(10000):
+    for _ in range(100000):
         word = sample_by_frequency_dict(histogram)
         sample_dict[word] = sample_dict.get(word, 0) + 1
 
@@ -202,11 +211,12 @@ if __name__ == "__main__":
     # print(word_frequency('diogenes', histo))
     # sample_by_frequency(histo, tokens)
     # wood = 'Alice was beginning to get very tired of sitting by her sister on the bank and of having nothing to do'
-    # fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
+    fish_text = ['one', 'fish', 'two', 'fish', 'red', 'fish', 'blue', 'fish']
     # print(word_histogram('fish', fish_text))
     # print(create_histogram(word_histogram('fish', fish_text)))
     # print(histo_of_histos(wood.split()))
-    # fishtogram = create_histogram(fish_text)
+    fishtogram = create_histogram(fish_text)
+    # print(fishtogram)
 
     # print(sample_sentence(histo_of_histos(wood.split()), create_histogram(wood.split()) ))
     # print(histogram(fish_text))
@@ -221,7 +231,7 @@ if __name__ == "__main__":
     # print(countogram(fish_text))
     # print(get_histogram_file(histofile))
     # sample_by_frequency_list(fishtogram)
-    # print(test_sampling_list(fishtogram))
+    # print(test_sampling_dict(fishtogram))
     # print(weight_all_words_dict(fishtogram))
     # print(sample_by_frequency_dict(fishtogram))
 
@@ -230,11 +240,16 @@ if __name__ == "__main__":
     # log_histogram(sorted_histo)
     '''
     benchmarking sampling dict test with 100,000 sample size
+
+    Benchmark test after refactoring code
     
     results:
-        300,004 function calls, in .116 seconds
+        3,000,004 function calls, in 1.111 seconds
+        999,901 function calls, in .393 seconds
+
+    refactored way is superior by ~3x the speed
     '''
-    # print(cProfile.run('test_sampling_dict(fishtogram)'))
+    print(cProfile.run('test_sampling_dict(fishtogram)'))
 
     '''
     benchmarking sampling list test with 100,000 sample size

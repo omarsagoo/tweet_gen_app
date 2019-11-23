@@ -1,7 +1,7 @@
 #!python
 
 from __future__ import division, print_function  # Python 2 and 3 compatibility
-from random import random
+from random import random, randint
 
 
 class Dictogram(dict):
@@ -9,14 +9,20 @@ class Dictogram(dict):
 
     def __init__(self, word_list=None):
         """Initialize this histogram as a new dict and count given words."""
+        
         super(Dictogram, self).__init__()  # Initialize this as a new dict
         # Add properties to track useful word counts for this histogram
         self.types = 0  # Count of distinct word types in this histogram
         self.tokens = 0  # Total count of all word tokens in this histogram
+        self.words_list = word_list
         # Count words in given list, if any
         if word_list is not None:
             for word in word_list:
                 self.add_count(word)
+
+    def __iter__(self):
+        for item in self.items():
+            yield item
 
     def add_count(self, word, count=1):
         """Increase frequency count of given word by given count amount."""
@@ -30,34 +36,20 @@ class Dictogram(dict):
         return self.get(word, 0)
 
     def sampling(self):
-        ran_num = random()
-        weight_dict = self.weight_of_all_words_dict()
-        prev_weight = 0
-    
-        for key in weight_dict:
-            if prev_weight < ran_num < weight_dict[key]:
-                return key
-            prev_weight = weight_dict[key]
-
-    def word_weight(self, word):
-        if word in self:
-            word_wgt = self.frequency(word) / self.tokens
-            return word_wgt
-        else:
-            return 'no word found'
-    
-    def weight_of_all_words_dict(self):
-        weight_dict = {}
-        total_weight = 0
+        """Samples a random word from the histogram"""
+        ran_num = randint(1, self.tokens)
+        curr_range = 0
         for key in self.keys():
-            wgt = self.word_weight(key)
-            total_weight += wgt
-            weight_dict[key] = weight_dict.get(key, total_weight)
-
-        return weight_dict
-
-    def markov_dict(self):
-        pass
+            
+            curr_range += self[key]
+            if curr_range >= ran_num:
+                return key
+    
+    def log_histogram(self, file_name):
+        log_file = open(f'{file_name}.txt', 'w')
+        for key in self:
+            log_file.write(f'{key} {self[key]}\n')
+        log_file.close()
 
 def test_sampling_dict(histogram):
     sample_dict = {}
@@ -77,10 +69,7 @@ def print_histogram(word_list):
         freq = histogram.frequency(word)
         print('{!r} occurs {} times'.format(word, freq))
     print()
-    print(f'word has a weight of {histogram.word_weight(word_list[0])} ')
-    print(histogram.weight_of_all_words_dict())
-    print(histogram.sampling())
-    print(test_sampling_dict(histogram))
+    
 
 
 def main():
