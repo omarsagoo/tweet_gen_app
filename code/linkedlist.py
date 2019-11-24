@@ -142,50 +142,70 @@ class LinkedList(object):
         Worst case running time: O(n) Why and under what conditions?
             depending on the size of the linked list. if there are a lot of items in the list"""
         
-        node = self.head
-        # prev_node = None
-        while node:
-            if self.count > 2:
-                if node.data == item:
-                    if node.previous == None:
-                        self.head = node.next
-                        if node.next == None:
-                            self.tail = None
-                    elif node.next == None:
-                        # prev_node.next = None
-                        node.previous.next = None
-                        self.tail = node.previous
-                    else:
-                        # prev_node.next = node.next
-                        node.next.previous = node.previous
-                        node.previous.next = node.next
-                    self.count -= 1
-                    return
-                else:
-                    # prev_node = node
-                    node = node.next
-            elif self.count == 2:
-                if self.head.data == item:
-                    self.head = self.tail
-                    self.tail.previous = None
-                    self.count -= 1
-                    return
-                elif self.tail.data == item:
-                    self.tail = self.head
-                    self.head.next = None
-                    self.count -= 1
-                    return
-            elif self.count == 1:
-                if self.head.data == item:
-                    self.head = None
-                    self.tail = None 
-                    self.count = 0
-                    return
-
+        # node = self.head
+        # # prev_node = None
+        # while node:
+        #     if self.count > 2:
+        #         if node.data == item:
+        #             if node.previous == None:
+        #                 self.head = node.next
+        #                 if node.next == None:
+        #                     self.tail = None
+        #             elif node.next == None:
+        #                 # prev_node.next = None
+        #                 node.previous.next = None
+        #                 self.tail = node.previous
+        #             else:
+        #                 # prev_node.next = node.next
+        #                 node.next.previous = node.previous
+        #                 node.previous.next = node.next
+        #             self.count -= 1
+        #             return
+        #         else:
+        #             # prev_node = node
+        #             node = node.next
+        #     elif self.count == 2:
+        #         if self.head.data == item:
+        #             self.head = self.tail
+        #             self.tail.previous = None
+        #             self.count -= 1
+        #             return
+        #         elif self.tail.data == item:
+        #             self.tail = self.head
+        #             self.head.next = None
+        #             self.count -= 1
+        #             return
+        #     elif self.count == 1:
+        #         if self.head.data == item:
+        #             self.head = None
+        #             self.tail = None 
+        #             self.count = 0
+        #             return
+        # 
         # if self.length == 0:
         #     self.head = None
         #     self.tail = None
-        raise ValueError('Item not found: {}'.format(item))
+        # raise ValueError('Item not found: {}'.format(item))
+        if item in self.items():
+            node = self.find(lambda data: data == item)
+            if self.head != node and self.tail != node:
+                node.previous.next = node.next
+                node.next.previous = node.previous
+                self.count -= 1
+            elif self.head == node and self.tail == node:
+                self.head = None
+                self.tail = None
+                self.count = 0
+            elif self.head == node and self.tail != node:
+                self.head = self.head.next
+                self.head.previous = None
+                self.count -= 1
+            elif self.head != node and self.tail == node:
+                self.tail = self.tail.previous
+                self.tail.next = None
+                self.count -= 1
+        else:
+            raise ValueError('Item not found: {}'.format(item))
 
                 
             

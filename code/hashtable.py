@@ -28,23 +28,26 @@ class HashTable(object):
 
     def _bucket_index(self, key):
         """Return the bucket index where the given key would be stored."""
-        # Calculate the given key's hash code and transform into bucket index
         return hash(key) % len(self.buckets)
     
     def _get_item(self, key):
-        # helper function, from the help of Ben Lafferty
-        index = self._bucket_index(key)
-        bucket = self.buckets[index]
-        
-        item = bucket.find(lambda item: item[0] == key)
+        '''helper function returns the item and bucket, inspired from Ben Lafferty'''
+        if self.contains(key):
+            index = self._bucket_index(key)
+            bucket = self.buckets[index]
+            
+            item = bucket.find(lambda item: item[0] == key)
 
-        return item, bucket
+            return item, bucket
+        else:
+            raise KeyError('Key not found: {}'.format(key))
+
 
 
     def keys(self):
         """Return a list of all keys in this hash table.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # Collect all keys in each bucket
+        TODO: Running time: O(n) Why and under what conditions?
+            checks a list of n items"""
         all_keys = []
         for bucket in self.buckets:
             for key, value in bucket.items():
@@ -53,9 +56,9 @@ class HashTable(object):
 
     def values(self):
         """Return a list of all values in this hash table.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Loop through all buckets
-        # TODO: Collect all values in each bucket
+        Running time: O(n) Why and under what conditions?
+            checks a list of n items"""
+        
         all_values = []
         for bucket in self.buckets:
             for key, value in bucket.items():
@@ -64,7 +67,8 @@ class HashTable(object):
 
     def items(self):
         """Return a list of all items (key-value pairs) in this hash table.
-        TODO: Running time: O(???) Why and under what conditions?"""
+        Running time: O(n) Why and under what conditions?
+                there is a linear amount of items in the hashtable"""
         # Collect all pairs of key-value entries in each bucket
         all_items = []
         for bucket in self.buckets:
@@ -73,14 +77,15 @@ class HashTable(object):
 
     def length(self):
         """Return the number of key-value entries by traversing its buckets.
-        TODO: Running time: O(1) Why and under what conditions?"""
+        Running time: O(1) Why and under what conditions?
+                constant number of operations"""
         
         return self.count
 
 
     def contains(self, key):
         """Return True if this hash table contains the given key, or False.
-        TODO: Running time: O(???) Why and under what conditions?"""
+        Running time: O(???) Why and under what conditions?"""
         
         if key in self.keys():
             return True
@@ -90,33 +95,26 @@ class HashTable(object):
 
     def get(self, key):
         """Return the value associated with the given key, or raise KeyError.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, return value associated with given key
-        # TODO: Otherwise, raise error to tell user get failed
-        # Hint: raise KeyError('Key not found: {}'.format(key))
-        if key in self.keys():
-            item, bucket = self._get_item(key)
-            if item.data[0] == key:
-                return item.data[1]
-        else:
-            raise KeyError('Key not found: {}'.format(key))
-
+        Running time: O(n) Why and under what conditions?
+                Checks a list of n items, linear time"""
+        
+        
+        item, bucket = self._get_item(key)
+        return item.data[1]
+        
     def set(self, key, value):
         """Insert or update the given key with its associated value.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, update value associated with given key
-        # TODO: Otherwise, insert given key-value entry into bucket
-        index = self._bucket_index(key)
-        bucket = self.buckets[index]
-        if key in self.keys():
-            og_val = self.get(key)
-            print(og_val)
-            bucket.replace((key, og_val), (key, value))
+        Running time: O(1)/O(n) Why and under what conditions?
+            If the key doesnt  exist then adds directly to the end. if it does its linear in checking the list"""
+        
+        
+        if self.contains(key):
+            item, bucket = self._get_item(key)
+            
+            bucket.replace(item.data, (key, value))
         else:
+            index = self._bucket_index(key)
+            bucket = self.buckets[index]
             bucket.append((key, value))
             self.count += 1
 
@@ -124,20 +122,12 @@ class HashTable(object):
 
     def delete(self, key):
         """Delete the given key from this hash table, or raise KeyError.
-        TODO: Running time: O(???) Why and under what conditions?"""
-        # TODO: Find bucket where given key belongs
-        # TODO: Check if key-value entry exists in bucket
-        # TODO: If found, delete entry associated with given key
-        # TODO: Otherwise, raise error to tell user delete failed
-        # Hint: raise KeyError('Key not found: {}'.format(key))
-        index = self._bucket_index(key)
-        bucket = self.buckets[index]
-        if key in self.keys():
-            val = self.get(key)
-            bucket.delete((key, val))
-            self.count -= 1
-        else:
-            raise KeyError('Key not found: {}'.format(key))
+        Running time: O(n) Why and under what conditions?
+                If there are a lot of items in the list, there is a linear amount of operations"""
+        
+        item, bucket = self._get_item(key)
+        bucket.delete(item.data)
+        self.count -= 1
 
 
 def test_hash_table():
@@ -159,9 +149,14 @@ def test_hash_table():
     print('length: {}'.format(ht.length()))
 
     # Enable this after implementing delete method
-    delete_implemented = False
+    delete_implemented = True
+
     if delete_implemented:
         print('\nTesting delete:')
+        print(ht.keys())
+        print(ht.length())
+        print()
+
         for key in ['I', 'V', 'X']:
             print('delete({!r})'.format(key))
             ht.delete(key)
