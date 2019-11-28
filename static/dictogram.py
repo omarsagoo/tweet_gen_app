@@ -15,14 +15,19 @@ class Dictogram(dict):
         self.types = 0  # Count of distinct word types in this histogram
         self.tokens = 0  # Total count of all word tokens in this histogram
         self.words_list = word_list
-        # Count words in given list, if any
+        # log_file = open('diogenes_histo.txt', 'r')
+
+        # self.dict_file = 'histo.txt'
+        '''Count words in given list, if any'''
         if word_list is not None:
             for word in word_list:
                 self.add_count(word)
-
+        # for line in log_file:
+        #     self = line
+   
     def __iter__(self):
-        for item in self.items():
-            yield item
+        for key in self.keys():
+            yield key
 
     def add_count(self, word, count=1):
         """Increase frequency count of given word by given count amount."""
@@ -44,11 +49,11 @@ class Dictogram(dict):
             curr_range += self[key]
             if curr_range >= ran_num:
                 return key
-    
+
     def log_histogram(self, file_name):
         log_file = open(f'{file_name}.txt', 'w')
-        for key in self:
-            log_file.write(f'{key} {self[key]}\n')
+        # for key in self:
+        log_file.write(f'{self}')
         log_file.close()
 
 def test_sampling_dict(histogram):
@@ -93,3 +98,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
