@@ -51,10 +51,14 @@ class Dictogram(dict):
                 return key
 
     def log_histogram(self, file_name):
-        log_file = open(f'{file_name}.txt', 'w')
-        # for key in self:
+        '''Logs the histogram to a text file with the given file_name'''
+        if '.txt' not in file_name:
+            log_file = open(f'{file_name}.txt', 'w')
+        else:
+            log_file = open(file_name, 'w')
         log_file.write(f'{self}')
         log_file.close()
+        
 
 def test_sampling_dict(histogram):
     sample_dict = {}
@@ -68,6 +72,7 @@ def print_histogram(word_list):
     print('word list: {}'.format(word_list))
     # Create a dictogram and display its contents
     histogram = Dictogram(word_list)
+    histogram.log_histogram("dog.txt")
     print('dictogram: {}'.format(histogram))
     print('{} tokens, {} types'.format(histogram.tokens, histogram.types))
     for word in word_list[-2:]:
