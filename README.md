@@ -1,16 +1,16 @@
 # tweet_gen_app
 
-**Tweet Generator App**
+**Tweet Generator App**/n
 
 generates sentences based off a Markov Chain and random sampling. 
 
 Currently creates sentences from a histogram of words said by Diogenes Laërtius in his book, 
 The Lives and Opinions of Eminent Philosphers.
 
-**To run:**
+**To run:**/n
 Clone Repo and run $python3 markov.py
 
-**What Next**
+**What Next:**/n
 Make it cleaner and add more functionality. Make it more efficient. Create a Flask App that displays the quotes on the page
 
 examples:
