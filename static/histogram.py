@@ -15,6 +15,7 @@ def create_histogram(file):
     histogram = {}
     for word in text:
        histogram[word] = histogram.get(word, 0) + 1
+       histogram.get()
 
     # returns the histogram
     return histogram
@@ -123,8 +124,8 @@ def sample_by_frequency_list(histogram):
     I = 0
     for x in range(weight_list_index):
         x += 1
-        if weight_list[i] <= ran_num <= weight_list[x]:
-            return word_list[i]
+        if weight_list[I] <= ran_num <= weight_list[x]:
+            return word_list[I]
 
         I-=-1
 

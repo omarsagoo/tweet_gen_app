@@ -5,7 +5,7 @@ from linkedlist import LinkedList
 
 class HashTable(object):
 
-    def __init__(self, init_size=4):
+    def __init__(self, init_size=8):
         """Initialize this hash table with the given initial size."""
         # Create a new list (used as fixed-size array) of empty linked lists
         self.buckets = [LinkedList() for _ in range(init_size)]
@@ -46,7 +46,7 @@ class HashTable(object):
 
     def keys(self):
         """Return a list of all keys in this hash table.
-        TODO: Running time: O(n) Why and under what conditions?
+        Running time: O(n) Why and under what conditions?
             checks a list of n items"""
         all_keys = []
         for bucket in self.buckets:
@@ -89,7 +89,7 @@ class HashTable(object):
         
         if key in self.keys():
             return True
-        elif key not in self.keys():
+        else:
             return False
         
 
@@ -106,15 +106,13 @@ class HashTable(object):
         """Insert or update the given key with its associated value.
         Running time: O(1)/O(n) Why and under what conditions?
             If the key doesnt  exist then adds directly to the end. if it does its linear in checking the list"""
-        
+        index = self._bucket_index(key)
+        bucket = self.buckets[index]
         
         if self.contains(key):
-            item, bucket = self._get_item(key)
-            
+            item = bucket.find(lambda item: item[0] == key)
             bucket.replace(item.data, (key, value))
         else:
-            index = self._bucket_index(key)
-            bucket = self.buckets[index]
             bucket.append((key, value))
             self.count += 1
 
