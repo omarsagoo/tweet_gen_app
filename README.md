@@ -8,7 +8,7 @@ Currently creates sentences from a histogram of words said by Diogenes Laërtius
 The Lives and Opinions of Eminent Philosphers.
 
 **To run:**
-Clone Repo and run $python3 markov.py
+Clone Repo and run $python3 second_markov.py
 
 **What Next:**
 Make it cleaner and add more functionality. Make it more efficient. Create a Flask App that displays the quotes on the page

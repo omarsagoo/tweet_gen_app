@@ -1,5 +1,5 @@
 import re
-from dictogram import Dictogram
+from .dictogram import Dictogram
 
 START = '[START]'
 STOP = '[STOP]'

@@ -1,5 +1,6 @@
-from markov import Markov, get_file_clean, START, STOP
-from dictogram import Dictogram
+from .dictogram import Dictogram
+from .word_splitter import split_into_sentences
+from .markov import Markov, get_file_clean, START, STOP
 
 # nltk api
 
@@ -28,7 +29,7 @@ class MarkovSecondOrder(Markov):
                 self.states[START].add_count(start_state)
 
             state = (state[1], next_word)
-
+        
         # creates a state for the last word pair, then adds STOP
         last_index = len(self.words_list) - 1
         last_state = (self.words_list[last_index - 1], self.words_list[last_index])
@@ -123,7 +124,7 @@ if __name__ == "__main__":
 
 
     FILE = 'diogenes.txt'
-    FILE_LIST = get_file_clean(FILE)
+    FILE_LIST = split_into_sentences(FILE)
     # dmv = MarkovSecondOrder(file_list)
     # dmv.create_second_markov()
     # print(dmv.create_sentence())
