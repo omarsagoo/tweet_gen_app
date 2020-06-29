@@ -16,6 +16,7 @@ dmv = MarkovNthOrder(DIO_FILE, 4)
 mv = MarkovNthOrder(TRUMP_FILE, 4)
 mv.create_nth_markov()
 dmv.create_nth_markov()
+print(dmv.states)
 @app.route('/')
 def sample_dict():
     trump_sentence = mv.create_sentence()

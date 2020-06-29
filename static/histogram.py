@@ -15,7 +15,7 @@ def create_histogram(file):
     histogram = {}
     for word in text:
        histogram[word] = histogram.get(word, 0) + 1
-       histogram.get()
+    
 
     # returns the histogram
     return histogram
@@ -217,6 +217,7 @@ if __name__ == "__main__":
     # print(create_histogram(word_histogram('fish', fish_text)))
     # print(histo_of_histos(wood.split()))
     fishtogram = create_histogram(fish_text)
+    print(test_sampling_dict(fishtogram))
     # print(fishtogram)
 
     # print(sample_sentence(histo_of_histos(wood.split()), create_histogram(wood.split()) ))
