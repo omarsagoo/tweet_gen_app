@@ -34,4 +34,3 @@ jobs:
       - store_artifacts:
           path: test-results
           destination: tr1
-
